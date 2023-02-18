@@ -1,0 +1,114 @@
+---
+title: "Search files in several OS"
+output: github_document
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, eval = FALSE}
+library(locatefile)
+```
+
+## MS-DOS
+
+### Find drive letters
+
+`wmic logicaldisk get name`
+
+`fsutil fsinfo drives` 
+
+### DIR command help
+
+`DIR /?`
+
+### Find a file
+
+Find all power point files in a drive letter
+
+`DIR "*.pptx" /S`
+
+Find all files that contain test*.txt and show
+Modification time (W) and order by size /O:D (old files first)
+
+`DIR "test*.txt" /S /T:W /O:D`
+
+Old files last
+
+`DIR "test*.txt" /S /T:W /O:-D`
+
+Creation time is C and access time A.
+
+### Find file of a given month
+
+`DIR "test*.txt" /S /T:W /O:D | FINDSTR 10/2022`
+
+### Find file with word in name
+
+`DIR "test*.txt" /S /T:W /O:D | FINDSTR name`
+
+With no case-sensitivity
+
+`DIR "test*.txt" /S /T:W /O:D | FINDSTR /I name`
+
+To change the format and report only the file path
+
+`DIR "test*.txt" /S /T:W /O:-D /B | FINDSTR /I name`
+
+## LINUX
+
+### Find drive letters
+
+In WSL
+
+`ls -l /mnt`
+
+### Find a file
+
+Find all power point files in a drive letter
+
+`cd /mnt/g; find . -name "*.pptx"`
+
+list long format
+
+`cd /mnt/g; find . -name "*.pptx" -ls`
+
+find all R files changes in the last 4 months
+
+`find . -name "*.R" ! -ctime +120`
+
+Find all R files accessed in the last 4 month but more than 3 months ago and
+list all files in the long format
+
+`find . -name "*.R" ! -atime +120 -atime +90 -exec ls -l {} +`
+
+## R
+
+### Find drive letters
+
+`LETTERS[fs::dir_exists(paste0(LETTERS, ":" ))]`
+
+In WSL
+
+`LETTERS[fs::dir_exists(paste0("/mnt/", letters))]`
+
+### Find a file
+
+Find all power point files in a drive letter
+
+`fs::dir_info("G:/La meva unitat/R/", recurse = TRUE, glob = "*.Rmd", fail = FALSE)`
+
+find all R files changes in the last 4 months
+
+```
+fs::dir_info("G:/La meva unitat/R/", recurse = TRUE, glob = "*.Rmd", fail = FALSE) |> 
+  dplyr::filter( modification_time > lubridate::today() - 120) |> 
+  dplyr::mutate(path = fs::path_dir(path), file = fs::path_file(path)) |> 
+  dplyr::select(path, file, size, modification_time)
+```
+
+
