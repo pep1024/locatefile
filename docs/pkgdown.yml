@@ -1,0 +1,7 @@
+pandoc: '2.18'
+pkgdown: 2.0.7
+pkgdown_sha: ~
+articles:
+  find_files_in_os: find_files_in_os.html
+last_built: 2023-02-19T11:44Z
+
