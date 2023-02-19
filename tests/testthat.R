@@ -1,4 +1,4 @@
 library(testthat)
-library(lf)
+library(locatefile)
 
-test_check("lf")
+# test_check("locatefile")

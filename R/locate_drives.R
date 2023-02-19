@@ -36,8 +36,8 @@ locate_drives <- function(path = NULL, extensions = NULL, patterns = NULL, ...){
   
   
   # Check if extensions and/or patterns passed
-  regexp_eq <- convert_to_regexp(extensions, patterns)
+  # regexp_eq <- convert_to_regexp(extensions, patterns)
  
   # dir_ls has to be called in a controlling the level of depth 
-  fs::dir_ls(path = ini_folders,  )
+  fs::dir_ls(path = ini_folders, recurse = FALSE)
 }
